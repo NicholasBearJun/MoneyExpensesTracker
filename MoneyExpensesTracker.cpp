@@ -7,9 +7,161 @@
 #include <stdio.h>
 using namespace std;
 
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+#include <string.h>
+using namespace std;
+
+void login();
+void registration();
+void forgot();
+void Record();
+
+int main()
+{
+	int c;
+	cout << "______________________________________________________________________________\n\n\n";
+	cout << "                           WELCOME TO LOGIN PAGE\n\n\n";
+	cout << "______________________________________________________________________________\n\n";
+	cout << "                           Press 1 | LOGIN\n";
+	cout << "                           Press 2 | REGISTER\n";
+	cout << "                           Press 3 | Forgot Password\n";
+	cout << "                           Press 4 | EXIT\n\n";
+	cout << "                           Please Select your choice: ";
+	cin >> c;
+	cout << "\n";
+
+	switch (c)
+	{
+	case 1:
+		login();
+		break;
+	case 2:
+		registration();
+		break;
+	case 3:
+		forgot();
+		break;
+	case 4:
+		cout << "                           THANK YOU!\n";
+		break;
+	default:
+		system("cls");
+		cout << "Please select from the option given above... \n\n";
+		main();
+	}
+}
+
+void login()
+{
+	int Pass = 0;
+	string User_ID, Password, Record_User_ID, Record_Password;
+	system("cls");
+	cout << "Please enter the username and pasword:  " << endl;
+	cout << "USERNAME: ";
+	cin >> User_ID;
+	cout << "PASSWORD: ";
+	cin >> Password;
+	cout << endl;
+
+	ifstream input("login.txt");
+
+	while (input >> Record_User_ID >> Record_Password)
+	{
+		if (Record_User_ID == User_ID && Record_Password == Password)
+		{
+			Pass = 1;
+			system("cls");
+		}
+	}
+	input.close();
+
+	if (Pass == 1)
+	{
+		cout << "Login Sucessful!\n\n";
+		Record();
+
+	}
+	else
+	{
+		cout << "Login Error! \nPlease check your username and password.\n\n";
+		login();
+	}
+}
+
+void registration()
+{
+	string R_User_ID, R_Password, Record_User_ID, Record_Password;
+	system("cls");
+	cout << "Enter the username: ";
+	cin >> R_User_ID;
+	cout << "Enter the password: ";
+	cin >> R_Password;
+
+	ofstream f1("record.txt", ios::app);
+	f1 << R_User_ID << " " << R_Password << endl;
+	system("cls");
+	cout << "Registration is successful! \n";
+	main();
+}
+
+void forgot()
+{
+	int option;
+	system("cls");
+	cout << "You forgot the password?\n";
+	cout << "Press 1 | Search your ID by username" << endl;
+	cout << "Press 2 | Main Menu" << endl;
+	cout << "\nEnter your option: ";
+	cin >> option;
+
+	switch (option)
+	{
+	case 1:
+	{
+		int Pass = 0;
+		string Record_User_ID, Record_Password, F_User_ID;
+		cout << "\nEnter the username which you remebered: ";
+		cin >> F_User_ID;
+
+		ifstream f2("login.txt");
+		while (f2 >> Record_User_ID >> Record_Password);
+		{
+			if (F_User_ID == Record_User_ID)
+			{
+				Pass = 1;
+			}
+		}
+		f2.close();
+		if (Pass == 1)
+		{
+			cout << "\n\nYour account is found!";
+			cout << "\nYour password: " << Record_Password << endl;
+			main();
+		}
+		else
+		{
+			cout << "\n\nSorry! Your account is not found!\n";
+			forgot();
+		}
+		break;
+	}
+
+	case 2:
+	{
+		main();
+	}
+
+	default:
+	{
+		cout << "Wrong choice! Please try again!" << endl;
+		forgot();
+	}
+	}
+}
 
 void Record() {
-
 	
 	// Variables for loop
 	bool Exit = false;
