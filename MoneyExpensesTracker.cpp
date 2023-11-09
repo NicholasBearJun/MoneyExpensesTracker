@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <time.h>
 #include <stdio.h>
@@ -41,7 +42,6 @@ void Record() {
 		cout << "You have choosen to exit the Record() Function" << endl;
 		cout << "==================================================" << endl;
 	}
-
 	else
 	{
 		cout << "\n==================================================" << endl;
@@ -76,24 +76,30 @@ void Record() {
 			cin >> InOrEx;
 		}
 
-		if (InOrEx != "I" || InOrEx != "i") {
+		if (InOrEx == "I" || InOrEx == "i") {
 			Category = "Income";
 		}
 		else{
 			Category = "Expenses";
 		}
 
+		cin.ignore(256, '\n');
 		cout << "\nNote: " << endl;
-		cin >> Note;
+		getline(cin, Note);
 	}
 
 	// Create or Open a text File
 	// Open the text file and loop the total of rows
 	
+	// Convert float type to string type variable
+	ostringstream ss;
+	ss << Amount;
+	string s(ss.str());
+
 	// Create Array
 	string records[4];
 	records[0] = Date;
-	records[1] = Amount;
+	records[1] = s;
 	records[2] = Category;
 	records[3] = Note;
 
@@ -101,16 +107,17 @@ void Record() {
 
 	// Open text file
 	fstream file;
-	file.open(filename, std::ios::in | std::ios::out);
+	file.open(filename, ios::in | ios::out | ios::app);
 
 	if (!file.is_open()) {
 		//File doesn't exist, createa new file
-		file.open(filename, std::ios::out);
+		file.open(filename, ios::out);
 		if (!file.is_open()) {
 			std::cerr << "Failed to create or open the file." << endl;
 		}
 	}
-	
+	file.close();
+
 	// Count the number of lines in the file
 	int lineCount = (0 / 4);
 	string line;
@@ -119,12 +126,13 @@ void Record() {
 	}
 	cout << lineCount << endl;
 
-	// Add into text file
-	file.open("Record.txt", ios::app);
 
+	// Add into text file
+	file.open(filename, ios::app);
 	for (int i = 0; i < 4; i++) {
 		file << records[i] << '\n';
 		file.flush();
+		cout << "Adding....... " << endl;
 	}
 
 	// Close Text File
@@ -134,7 +142,36 @@ void Record() {
 
 }
 
+void Edit() {
 
+	// Open and read file
+	// Loop through all record
+	// Set an "Abstarct ID" using division by 4 to get i
+	// List out the 2D array[i][j] following [Date, Amount, Category, Note]
+
+	ifstream file("Record.txt");
+
+	// Check if file Exist, if not jump back to selection page
+	if (!file.is_open()) {
+		std::cerr << "Failed to create or open the file." << endl;
+	}
+
+	int count = 1;
+	for (string line; getline(file, line);) {
+		
+		if (count % 4 == 0) {
+			cout << line << "\n";
+			count ++;
+		}
+		else {
+			cout << line << " ";
+			count ++;
+		}
+	}
+
+	file.close();
+
+}
 
 int main()
 {
@@ -160,12 +197,15 @@ int main()
 		//Jump to respective function
 		//Save in Header Files???
 		switch (response) {
+			case '0':
+				cout << "\nWhy is this happening???" << endl;
+				continue;
 			case '1':
 				// Jump to Function Record()
 				Record();
 				break;
 			case '2':
-				cout << "Case 2" << endl;
+				Edit();
 				break;
 			case '3':
 				cout << "Case 3" << endl;
@@ -174,9 +214,8 @@ int main()
 				cout << "Case 4" << endl;
 				break;
 			default:
-				cout << "Invalid function please enter again: " << endl;
+				cout << "\nInvalid function please enter again: " << endl;
 				continue;
 		}
 	}
-	return 0;
 }
