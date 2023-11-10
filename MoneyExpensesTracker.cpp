@@ -4,15 +4,12 @@
 #include <fstream>
 #include <string>
 #include <time.h>
+#include <cstdlib>
+#include <string.h>
 #include <stdio.h>
 using namespace std;
 
-#include <iostream>
-#include <fstream>
-#include <cstdlib>
-#include <string.h>
-using namespace std;
-
+void finance();
 void login();
 void registration();
 void forgot();
@@ -53,6 +50,50 @@ int main()
 	}
 }
 
+void finance()
+{
+
+	while (true)
+	{
+		char response;
+
+		// Main Page loop that jumps between functions AFTER login()
+		// Allow user to choose their function using numbers
+
+		cout << "\n              Money Expense Tracker               " << endl;
+		cout << "==================================================" << endl;
+		cout << "Please choose a function below" << endl;
+		cout << "1. Record a new input" << endl;
+		cout << "2. Edit a record" << endl;
+		cout << "3. Delete a record" << endl;
+		cout << "4. Display a report" << endl;
+		cout << "==================================================" << endl;
+		cout << "Enter your function: ";
+		cin >> response;
+
+		//Jump to respective function
+		//Save in Header Files???
+		switch (response) {
+		case '1':
+			// Jump to Function Record()
+			Record();
+			break;
+		case '2':
+			cout << "Case 2" << endl;
+			break;
+		case '3':
+			cout << "Case 3" << endl;
+			break;
+		case '4':
+			cout << "Case 4" << endl;
+			break;
+		default:
+			cout << "Invalid function please enter again: " << endl;
+			continue;
+		}
+	}
+}
+
 void login()
 {
 	int Pass = 0;
@@ -72,19 +113,20 @@ void login()
 		if (Record_User_ID == User_ID && Record_Password == Password)
 		{
 			Pass = 1;
-			system("cls");
 		}
 	}
 	input.close();
 
 	if (Pass == 1)
 	{
+		system("cls");
 		cout << "Login Sucessful!\n\n";
-		Record();
+		finance();
 
 	}
 	else
 	{
+		system("cls");
 		cout << "Login Error! \nPlease check your username and password.\n\n";
 		login();
 	}
@@ -99,7 +141,7 @@ void registration()
 	cout << "Enter the password: ";
 	cin >> R_Password;
 
-	ofstream f1("record.txt", ios::app);
+	ofstream f1("login.txt", ios::app);
 	f1 << R_User_ID << " " << R_Password << endl;
 	system("cls");
 	cout << "Registration is successful! \n";
@@ -118,51 +160,52 @@ void forgot()
 
 	switch (option)
 	{
-	case 1:
-	{
-		int Pass = 0;
-		string Record_User_ID, Record_Password, F_User_ID;
-		cout << "\nEnter the username which you remebered: ";
-		cin >> F_User_ID;
+		case 1:
+		{
+			int Pass = 0;
+			string Record_User_ID, Record_Password, F_User_ID;
+			cout << "\nEnter the username which you remebered: ";
+			cin >> F_User_ID;
 
-		ifstream f2("login.txt");
-		while (f2 >> Record_User_ID >> Record_Password);
-		{
-			if (F_User_ID == Record_User_ID)
+			ifstream f2("login.txt");
+			while (f2 >> Record_User_ID >> Record_Password);
 			{
-				Pass = 1;
+				if (F_User_ID == Record_User_ID)
+				{
+					Pass = 1;
+				}
 			}
+			f2.close();
+			if (Pass == 1)
+			{
+				cout << "\n\nYour account is found!";
+				cout << "\nYour password: " << Record_Password << endl;
+				main();
+			}
+			else
+			{
+				cout << "\n\nSorry! Your account is not found!\n";
+				forgot();
+			}
+			break;
 		}
-		f2.close();
-		if (Pass == 1)
+
+		case 2:
 		{
-			cout << "\n\nYour account is found!";
-			cout << "\nYour password: " << Record_Password << endl;
 			main();
 		}
-		else
+
+		default:
 		{
-			cout << "\n\nSorry! Your account is not found!\n";
+			cout << "Wrong choice! Please try again!" << endl;
 			forgot();
 		}
-		break;
-	}
-
-	case 2:
-	{
-		main();
-	}
-
-	default:
-	{
-		cout << "Wrong choice! Please try again!" << endl;
-		forgot();
-	}
 	}
 }
 
-void Record() {
-	
+void Record()
+{
+
 	// Variables for loop
 	bool Exit = false;
 	char Change_Date;
@@ -208,15 +251,15 @@ void Record() {
 			string temp = to_string(year) + "-" + to_string(month) + "-" + to_string(day);
 			Date = temp;
 		}
-		else{
+		else {
 			cout << "You have chosen to change the date." << endl;
 			cout << "Enter your Date (YYYY-MM-DD): ";
 			cin >> Date;
 		}
-		
+
 		cout << "\nAmount (RM): " << endl;
 		cin >> Amount;
-		
+
 		// Category Income or Expenses
 		// Cheack if users want to store as income or expenses
 		cout << "\nCategory [Income or Expenses?](I/E): ";
@@ -231,7 +274,7 @@ void Record() {
 		if (InOrEx != "I" || InOrEx != "i") {
 			Category = "Income";
 		}
-		else{
+		else {
 			Category = "Expenses";
 		}
 
@@ -241,7 +284,7 @@ void Record() {
 
 	// Create or Open a text File
 	// Open the text file and loop the total of rows
-	
+
 	// Create Array
 	string records[4];
 	records[0] = Date;
@@ -262,7 +305,7 @@ void Record() {
 			std::cerr << "Failed to create or open the file." << endl;
 		}
 	}
-	
+
 	// Count the number of lines in the file
 	int lineCount = (0 / 4);
 	string line;
@@ -281,54 +324,7 @@ void Record() {
 
 	// Close Text File
 	file.close();
+	system("cls");
 	cout << "Record written into file" << endl;
-
-
 }
 
-
-
-int main()
-{
-
-	while (true)
-	{
-		char response;
-
-		// Main Page loop that jumps between functions AFTER login()
-		// Allow user to choose their function using numbers
-
-		cout << "\n              Money Expense Tracker               " << endl;
-		cout << "==================================================" << endl;
-		cout << "Please choose a function below" << endl;
-		cout << "1. Record a new input" << endl;
-		cout << "2. Edit a record" << endl;
-		cout << "3. Delete a record" << endl;
-		cout << "4. Display a report" << endl;
-		cout << "==================================================" << endl;
-		cout << "Enter your function: ";
-		cin >> response;
-
-		//Jump to respective function
-		//Save in Header Files???
-		switch (response) {
-			case '1':
-				// Jump to Function Record()
-				Record();
-				break;
-			case '2':
-				cout << "Case 2" << endl;
-				break;
-			case '3':
-				cout << "Case 3" << endl;
-				break;
-			case '4':
-				cout << "Case 4" << endl;
-				break;
-			default:
-				cout << "Invalid function please enter again: " << endl;
-				continue;
-		}
-	}
-	return 0;
-}
