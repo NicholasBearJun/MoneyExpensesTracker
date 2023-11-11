@@ -6,6 +6,8 @@
 #include <string>
 #include <time.h>
 #include <stdio.h>
+#include <vector>
+#include <iomanip>
 using namespace std;
 
 
@@ -89,24 +91,10 @@ void Record() {
 	}
 
 	// Create or Open a text File
-	// Open the text file and loop the total of rows
 	
-	// Convert float type to string type variable
-	ostringstream ss;
-	ss << Amount;
-	string s(ss.str());
-
-	// Create Array
-	string records[4];
-	records[0] = Date;
-	records[1] = s;
-	records[2] = Category;
-	records[3] = Note;
-
-	string filename = "Record.txt";
-
 	// Open text file
 	fstream file;
+	string filename = "Record.txt";
 	file.open(filename, ios::in | ios::out | ios::app);
 
 	if (!file.is_open()) {
@@ -117,23 +105,51 @@ void Record() {
 		}
 	}
 	file.close();
-
+	
 	// Count the number of lines in the file
-	int lineCount = (0 / 4);
+	int lineCount = 1;
 	string line;
 	while (getline(file, line)) {
 		lineCount++;
 	}
-	cout << lineCount << endl;
+	
+	// Convert float type to string type variable
+	ostringstream ss;
+	ss << Amount;
+	string s(ss.str());
 
+	//allocate the array
+	string** record = new string* [lineCount];
+	for (int i = 0; i < lineCount; i++)
+		record[i] = new string[4];
 
+	// use the array
 	// Add into text file
 	file.open(filename, ios::app);
-	for (int i = 0; i < 4; i++) {
-		file << records[i] << '\n';
+	for (int i = 0; i < lineCount; i++) {
+
+		record[i][0] = Date;
+		record[i][1] = s;
+		record[i][2] = Category;
+		record[i][3] = Note;
+
+		for (int j = 0; j < 4; j++) {
+			file << record[i][j];
+			if (j != 3) {
+				file << ",";
+			}
+			else{
+				file << "\n";
+			}
+		}
 		file.flush();
 		cout << "Adding....... " << endl;
 	}
+
+	//deallocate the array
+	for (int i = 0; i < lineCount; i++)
+		delete[] record[i];
+	delete[] record;
 
 	// Close Text File
 	file.close();
@@ -142,36 +158,158 @@ void Record() {
 
 }
 
-void Edit() {
-
-	// Open and read file
-	// Loop through all record
-	// Set an "Abstarct ID" using division by 4 to get i
-	// List out the 2D array[i][j] following [Date, Amount, Category, Note]
-
-	ifstream file("Record.txt");
-
-	// Check if file Exist, if not jump back to selection page
-	if (!file.is_open()) {
-		std::cerr << "Failed to create or open the file." << endl;
-	}
-
-	int count = 1;
-	for (string line; getline(file, line);) {
-		
-		if (count % 4 == 0) {
-			cout << line << "\n";
-			count ++;
-		}
-		else {
-			cout << line << " ";
-			count ++;
-		}
-	}
-
-	file.close();
-
-}
+//
+//// ---------------------------------------------------------------Entire Edit()
+//
+//// Function for edit()
+//// Make Records
+//typedef struct {
+//	string recordNum;
+//	string date;
+//	int amount; 
+//	string category;
+//	string note;
+//}Record;
+//
+//void printTable(const vector<Record>& records) {
+//	vector<Record> Records;
+//
+//	// Print table header
+//	cout << setw(6) << "Record Number"
+//		<< setw(8) << "Date"
+//		<< setw(8) << "Amount"
+//		<< setw(8) << "Category"
+//		<< "Note\n";
+//
+//	// Print each record with index
+//	for (size_t i = 0; i < (records.size()); ++i) {
+//		const Record& record = records[i];
+//		cout << setw(6) << i + 1
+//			<< setw(8) << record.date
+//			<< setw(8) << record.amount
+//			<< setw(8) << record.category
+//			<< record.note << "\n";
+//	}
+//}
+//
+//
+//void Edit() {
+//
+//	//Initialize
+//
+//
+//	// Open and read file
+//	// Loop through all record
+//	/*
+//	fstream file;
+//	string filename = "Record.txt";
+//	file.open(filename, ios::in);
+//
+//	// Count the number of lines in the file
+//	int lineCount = 1;
+//	string line;
+//	while (getline(file, line)) {
+//		lineCount++;
+//	}
+//	*/
+//
+//	// Display The elements inside the record
+//	std::ifstream inputFile("Record.txt");
+//
+//	if (!inputFile) {
+//		std::cerr << "Error opening the file." << std::endl;
+//	}
+//
+//	vector<Record> records;
+//	string line;
+//
+//	while (getline(inputFile, line)) {
+//		istringstream iss(line);
+//		string token;
+//
+//		Record record;
+//
+//		// Read and split the line using ',' as delimiter
+//		getline(iss, token, ',');
+//		record.date = token;
+//
+//		std::getline(iss, token, ',');
+//		record.amount = std::stoi(token);
+//
+//		std::getline(iss, token, ',');
+//		record.category = token;
+//
+//		std::getline(iss, token, ',');
+//		record.note = token;
+//
+//		records.push_back(record);
+//	}
+//
+//	// Close the file after reading
+//	inputFile.close();
+//
+//	// Print the transactions in table form with index
+//	printTable(records);
+//	
+//
+//	/*ifstream file("Record.txt");
+//
+//	// Check if file Exist, if not jump back to selection page
+//	if (!file.is_open()) {
+//		std::cerr << "Failed to create or open the file." << endl;
+//	}
+//
+//	// Loop through all lines using count to seperate the rows
+//	int count = 1;
+//	int RecordCout = 1;
+//	string templine;
+//
+//	cout << "\nRecord " << RecordCout << " : ";
+//	for (string line; getline(file, line);) {
+//		
+//		templine = file.eof();
+//
+//		if (count % 4 == 0 && line != templine) {
+//			RecordCout++;
+//			cout << line << "\n";
+//			count++;
+//			cout << "Record " << RecordCout << " : ";
+//		}
+//
+//		else {
+//			cout << line << " ";
+//			count ++;
+//		}
+//
+//	}
+//
+//	file.close();
+//	*/
+//
+//
+//	// Get user response on which record
+//	int ResponseNum;
+//	int WhichArray;
+//
+//	cout << "\n==================================================" << endl;
+//	cout << "Enter the number of the following line you would like to edit" << endl;
+//	cout << "==================================================" << endl;
+//	cout << "Which record number : ";
+//	cin >> ResponseNum;
+//
+//
+//	cout << "\n==================================================" << endl;
+//	cout << "What would you like to change ?";
+//	cout << "==================================================" << endl;
+//	cout << "1. Date";
+//	cout << "2. Amount";
+//	cout << "3. Category";
+//	cout << "4. Note" << endl;
+//	cin >> WhichArray;
+//
+//
+//}
+//// ---------------------------------------------------------------Entire Edit()
 
 int main()
 {
@@ -179,6 +317,7 @@ int main()
 	while (true)
 	{
 		char response;
+
 
 		// Main Page loop that jumps between functions AFTER login()
 		// Allow user to choose their function using numbers
@@ -205,7 +344,8 @@ int main()
 				Record();
 				break;
 			case '2':
-				Edit();
+				cout << "case 2";
+				//Edit();
 				break;
 			case '3':
 				cout << "Case 3" << endl;
