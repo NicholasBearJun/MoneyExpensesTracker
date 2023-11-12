@@ -1,3 +1,4 @@
 2023-11-10,12,Expenses,buy maggi
 2023-11-11,5,Income,wash car
 2023-11-12,20,Expenses,shoppe shop shit
+2023-11-12,10,Income,extra money

@@ -10,9 +10,27 @@
 #include <iomanip>
 using namespace std;
 
+int LineCount() {
+
+	//open text file
+	fstream file;
+	string filename = "Record.txt";
+	file.open(filename, ios::in);
+
+	// Count the number of lines in the file
+	int lineCount = 1;
+	string line;
+	while (getline(file, line)) {
+		lineCount++;
+	}
+	file.close();
+
+	return lineCount;
+}
 
 void Record() {
 
+	system("CLS");
 	
 	// Variables for loop
 	bool Exit = false;
@@ -28,7 +46,6 @@ void Record() {
 	string Date;
 	float Amount;
 	string Category;
-	string Account;
 	string Note;
 
 	int year = (1900 + ltm->tm_year);
@@ -106,12 +123,15 @@ void Record() {
 	}
 	file.close();
 	
-	// Count the number of lines in the file
-	int lineCount = 1;
-	string line;
-	while (getline(file, line)) {
-		lineCount++;
-	}
+	//
+	int lineCount = LineCount();
+
+	//// Count the number of lines in the file
+	//int lineCount = 1;
+	//string line;
+	//while (getline(file, line)) {
+	//	lineCount++;
+	//}
 	
 	// Convert float type to string type variable
 	ostringstream ss;
@@ -311,6 +331,128 @@ void Record() {
 //}
 //// ---------------------------------------------------------------Entire Edit()
 
+
+// Delete() Function
+
+// For single character delimiter
+std::vector<std::string> split(const std::string& s, char delim) {
+	std::vector<std::string> result;
+	std::stringstream ss(s);
+	std::string item;
+
+	while (getline(ss, item, delim)) {
+		result.push_back(item);
+	}
+
+	return result;
+}
+
+
+void Delete() {
+
+	//Loop through file to get number of rows
+	// Number of rows store into lineCount
+	// get which column user want to delete = j
+	// use array[lineCount][j] to find the position 
+
+	// Open text file
+	ifstream file("Record.txt");
+	/*string filename = "Record.txt";*/
+	/*file.open(filename, ios::in);*/
+	if (!file.is_open()) {
+		cout << "No Data present";
+		file.close();
+	}
+	else{
+
+		// Loop through all lines using count to seperate the rows
+		/*int RecordCout = 1;
+		string templine;
+
+
+		int lineCount = LineCount();*/
+
+		//// Count the number of lines in the file
+		//int lineCount = 1;
+		//string line;
+		//while (getline(file, line)) {
+		//	lineCount++;
+		//}
+
+		////allocate the array
+		//string** record = new string * [lineCount];
+		//for (int i = 0; i < lineCount; i++)
+		//	record[i] = new string[4];
+
+
+		//// Use the array
+		//int j = 0;
+		//for (string line; getline(file, line);) {
+		//	templine = file.eof();
+
+		//	string str = line;
+		//	vector <string> v = split(str, ',');
+
+		//	for (auto e : v) record[lineCount][j] = e;
+		//	j++;
+		//}
+
+		////deallocate the array
+		//for (int i = 0; i < lineCount; i++)
+		//	delete[] record[i];
+		//delete[] record;
+
+		//// Close file
+		//file.close();
+		//cout << "Record written into array......" << endl;
+
+		string Date, Category, Note;
+		int Amount;
+		int Count = 0;
+
+		string tempAmount;
+		string Line;
+
+		// Print out Array
+		cout << "\n==================================================" << endl;
+		cout << "Enter the number of the following Record you would like to Delete" << endl;
+		cout << "==================================================" << endl;
+		cout << "No.  " << "Date" << "\t\t" << "Amount" << "\t" << "Category" << "\t" << "Note";
+		
+		while (getline(file, Line)) {
+			stringstream ss(Line);
+			getline(ss, Date, ',');
+			Date = Date.substr(0, 4) +"-"+ Date.substr(5, 2) + "-" + Date.substr(9, 2);
+			getline(ss, tempAmount, ',');
+			Amount = stoi(tempAmount);
+			getline(ss, Category, ',');
+			getline(ss, Note);
+			// The array itself
+			cout << "\n" << Count << Date << "\t" << Amount << "\t" << Category << "\t\t" << Note;
+			Count++;
+		}
+
+
+		/*for (int i = 0; i < lineCount - 1; i++) {
+			cout << "\nRecord " << RecordCout << " : ";
+			for (int j = 0; j < 4; j++) {
+				cout << record[i][j] << "\t";
+			}
+			RecordCout++;
+		}*/
+
+	}
+
+	 //Get user response on which record
+	int ResponseNum;
+	cin >> ResponseNum;
+
+
+
+
+}
+
+
 int main()
 {
 
@@ -338,6 +480,7 @@ int main()
 		switch (response) {
 			case '0':
 				cout << "\nWhy is this happening???" << endl;
+				system("CLS");
 				continue;
 			case '1':
 				// Jump to Function Record()
@@ -346,15 +489,19 @@ int main()
 			case '2':
 				cout << "case 2";
 				//Edit();
+				system("CLS");
 				break;
 			case '3':
-				cout << "Case 3" << endl;
+				Delete();
+				system("CLS");
 				break;
 			case '4':
 				cout << "Case 4" << endl;
+				system("CLS");
 				break;
 			default:
 				cout << "\nInvalid function please enter again: " << endl;
+				system("CLS");
 				continue;
 		}
 	}
