@@ -123,57 +123,7 @@ void Record() {
 	system("cls");
 	cout << "Adding...";
 
-	file.close();
-
-	/*ofstream file("Record.txt", ios::app);
-	file << Date << "," << Amount << "," << Category << "," << Note << endl;
-	system("cls");
-	cout << "Adding...";*/
-
-	//--------------- Old Record Code ----------------------
-	//// lineCount function
-	//int lineCount = LineCount();
-	//
-	//// Convert float type to string type variable
-	//ostringstream ss;
-	//ss << Amount;
-	//string s(ss.str());
-
-	////allocate the array
-	//string** record = new string* [lineCount];
-	//for (int i = 0; i < lineCount; i++)
-	//	record[i] = new string[4];
-
-	//// use the array
-	//// Add into text file
-	//file.open(filename, ios::app);
-	//for (int i = 0; i < lineCount; i++) {
-
-	//	record[i][0] = Date;
-	//	record[i][1] = s;
-	//	record[i][2] = Category;
-	//	record[i][3] = Note;
-
-	//	for (int j = 0; j < 4; j++) {
-	//		file << record[i][j];
-	//		if (j != 3) {
-	//			file << ",";
-	//		}
-	//		else{
-	//			file << "\n";
-	//		}
-	//	}
-	//	/*file.flush();*/
-	//	cout << "Adding....... " << endl;
-	//}
-
-	////deallocate the array
-	//for (int i = 0; i < lineCount; i++)
-	//	delete[] record[i];
-	//delete[] record;
-	//---------------------------------------------------
-
-	// Close Text File
+	// close file
 	file.close();
 	cout << "Record written into file" << endl;
 
@@ -366,21 +316,6 @@ void Delete() {
 		file.close();
 	}
 	else{
-
-		// Loop through all lines using count to seperate the rows
-		/*int RecordCout = 1;
-		string templine;
-
-
-		int lineCount = LineCount();*/
-
-		//// Count the number of lines in the file
-		//int lineCount = 1;
-		//string line;
-		//while (getline(file, line)) {
-		//	lineCount++;
-		//}
-
 		////allocate the array
 		//string** record = new string * [lineCount];
 		//for (int i = 0; i < lineCount; i++)
@@ -430,19 +365,10 @@ void Delete() {
 			getline(ss, Category, ',');
 			getline(ss, Note);
 			// The array itself
-			cout << "\n" << Count<< "\t" << Date << "\t\t" << Amount << "\t" << Category << "    " << Note;
+			cout << "\n" << (Count + 1)<< "\t" << Date << "\t\t" << Amount << "\t" << Category << "    " << Note;
 			Count++;
 		}
 		file.close();
-
-		/*for (int i = 0; i < lineCount - 1; i++) {
-			cout << "\nRecord " << RecordCout << " : ";
-			for (int j = 0; j < 4; j++) {
-				cout << record[i][j] << "\t";
-			}
-			RecordCout++;
-		}*/
-
 	}
 
 	 //Get user response on which record
@@ -450,6 +376,47 @@ void Delete() {
 	cout << "\n\nEnter the number of the following Record you would like to Delete : ";
 	int ResponseNum;
 	cin >> ResponseNum;
+
+	// Delete a line
+	fstream read_file;
+
+	read_file.open("Record.txt");
+
+	if (read_file.fail()) {
+		cout << "Error opening file." << endl;
+	}
+
+	vector <string> lines;
+	string line;
+
+	while (getline(read_file, line))
+		lines.push_back(line);
+
+	read_file.close();
+
+	if (ResponseNum > line.size()) {
+		cout << "Line" << ResponseNum;
+		cout << "not in file" << endl;
+
+		cout << "File has " << lines.size();
+		cout << "lines." << endl;
+
+	}
+
+	ofstream write_file;
+	write_file.open("Record.txt");
+
+	if (write_file.fail()) {
+		cout << "Error opening file" << endl;
+	}
+
+	ResponseNum--;
+	for (int i = 0; i < lines.size(); i++)
+		if (i != ResponseNum)
+			write_file << lines[i] << endl;
+
+	write_file.close();
+
 
 
 
