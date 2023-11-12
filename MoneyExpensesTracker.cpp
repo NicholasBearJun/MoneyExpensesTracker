@@ -35,7 +35,6 @@ void Record() {
 	// Variables for loop
 	bool Exit = false;
 	char Change_Date;
-	string InOrEx;
 
 	time_t now = time(0);
 
@@ -43,10 +42,8 @@ void Record() {
 
 	// Variables for User input
 
-	string Date;
+	string Date, Category, Note, InOrEx;
 	float Amount;
-	string Category;
-	string Note;
 
 	int year = (1900 + ltm->tm_year);
 	int month = (1 + ltm->tm_mon);
@@ -121,55 +118,60 @@ void Record() {
 			std::cerr << "Failed to create or open the file." << endl;
 		}
 	}
+
+	file << Date << "," << Amount << "," << Category << "," << Note << endl;
+	system("cls");
+	cout << "Adding...";
+
 	file.close();
-	
+
+	/*ofstream file("Record.txt", ios::app);
+	file << Date << "," << Amount << "," << Category << "," << Note << endl;
+	system("cls");
+	cout << "Adding...";*/
+
+	//--------------- Old Record Code ----------------------
+	//// lineCount function
+	//int lineCount = LineCount();
 	//
-	int lineCount = LineCount();
+	//// Convert float type to string type variable
+	//ostringstream ss;
+	//ss << Amount;
+	//string s(ss.str());
 
-	//// Count the number of lines in the file
-	//int lineCount = 1;
-	//string line;
-	//while (getline(file, line)) {
-	//	lineCount++;
+	////allocate the array
+	//string** record = new string* [lineCount];
+	//for (int i = 0; i < lineCount; i++)
+	//	record[i] = new string[4];
+
+	//// use the array
+	//// Add into text file
+	//file.open(filename, ios::app);
+	//for (int i = 0; i < lineCount; i++) {
+
+	//	record[i][0] = Date;
+	//	record[i][1] = s;
+	//	record[i][2] = Category;
+	//	record[i][3] = Note;
+
+	//	for (int j = 0; j < 4; j++) {
+	//		file << record[i][j];
+	//		if (j != 3) {
+	//			file << ",";
+	//		}
+	//		else{
+	//			file << "\n";
+	//		}
+	//	}
+	//	/*file.flush();*/
+	//	cout << "Adding....... " << endl;
 	//}
-	
-	// Convert float type to string type variable
-	ostringstream ss;
-	ss << Amount;
-	string s(ss.str());
 
-	//allocate the array
-	string** record = new string* [lineCount];
-	for (int i = 0; i < lineCount; i++)
-		record[i] = new string[4];
-
-	// use the array
-	// Add into text file
-	file.open(filename, ios::app);
-	for (int i = 0; i < lineCount; i++) {
-
-		record[i][0] = Date;
-		record[i][1] = s;
-		record[i][2] = Category;
-		record[i][3] = Note;
-
-		for (int j = 0; j < 4; j++) {
-			file << record[i][j];
-			if (j != 3) {
-				file << ",";
-			}
-			else{
-				file << "\n";
-			}
-		}
-		file.flush();
-		cout << "Adding....... " << endl;
-	}
-
-	//deallocate the array
-	for (int i = 0; i < lineCount; i++)
-		delete[] record[i];
-	delete[] record;
+	////deallocate the array
+	//for (int i = 0; i < lineCount; i++)
+	//	delete[] record[i];
+	//delete[] record;
+	//---------------------------------------------------
 
 	// Close Text File
 	file.close();
@@ -356,7 +358,7 @@ void Delete() {
 	// use array[lineCount][j] to find the position 
 
 	// Open text file
-	ifstream file("Record.txt");
+	fstream file("Record.txt");
 	/*string filename = "Record.txt";*/
 	/*file.open(filename, ios::in);*/
 	if (!file.is_open()) {
@@ -415,9 +417,9 @@ void Delete() {
 
 		// Print out Array
 		cout << "\n==================================================" << endl;
-		cout << "Enter the number of the following Record you would like to Delete" << endl;
+		cout << "\t\tList of Records" << endl;
 		cout << "==================================================" << endl;
-		cout << "No.  " << "Date" << "\t\t" << "Amount" << "\t" << "Category" << "\t" << "Note";
+		cout << "No."<< "\t" << "Date" << "\t\t" << "Amount" << "\t" << "Category" << "\t" << "Note";
 		
 		while (getline(file, Line)) {
 			stringstream ss(Line);
@@ -428,10 +430,10 @@ void Delete() {
 			getline(ss, Category, ',');
 			getline(ss, Note);
 			// The array itself
-			cout << "\n" << Count << Date << "\t" << Amount << "\t" << Category << "\t\t" << Note;
+			cout << "\n" << Count<< "\t" << Date << "\t\t" << Amount << "\t" << Category << "    " << Note;
 			Count++;
 		}
-
+		file.close();
 
 		/*for (int i = 0; i < lineCount - 1; i++) {
 			cout << "\nRecord " << RecordCout << " : ";
@@ -444,6 +446,8 @@ void Delete() {
 	}
 
 	 //Get user response on which record
+
+	cout << "\n\nEnter the number of the following Record you would like to Delete : ";
 	int ResponseNum;
 	cin >> ResponseNum;
 
