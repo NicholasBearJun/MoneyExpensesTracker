@@ -7,17 +7,25 @@
 #include <cstdlib>
 #include <string.h>
 #include <stdio.h>
+#include <sstream>
+#include <iomanip>
+#include <vector>
 using namespace std;
 
-void finance();
 void login();
 void registration();
 void forgot();
 void Record();
+void Edit();
+void Delete();
+void Display();
+void Income();
+void Expenses();
 
 int main()
 {
 	int c;
+	//Display option for user to choose
 	cout << "______________________________________________________________________________\n\n\n";
 	cout << "                           WELCOME TO LOGIN PAGE\n\n\n";
 	cout << "______________________________________________________________________________\n\n";
@@ -29,33 +37,46 @@ int main()
 	cin >> c;
 	cout << "\n";
 
+	//Switch Case
 	switch (c)
 	{
-	case 1:
+	case 1:			
+		//Jump to login function
+		system("cls");
 		login();
 		break;
 	case 2:
+		//Jump to registration function
+		system("cls");
 		registration();
 		break;
 	case 3:
+		//Jump to forgot function
+		system("cls");
 		forgot();
 		break;
 	case 4:
+		//terminate programme
 		cout << "                           THANK YOU!\n";
 		break;
 	default:
+		//Error checking
 		system("cls");
-		cout << "Please select from the option given above... \n\n";
+		cout << "\nInvalid input please enter again: " << endl;
+		cin.clear();  //Clear the error flag
+		cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  //Discard invalid input
 		main();
+		break;
 	}
 }
 
+
 void finance()
 {
-
 	while (true)
 	{
-		char response;
+		int response;
+
 
 		// Main Page loop that jumps between functions AFTER login()
 		// Allow user to choose their function using numbers
@@ -74,31 +95,47 @@ void finance()
 		//Jump to respective function
 		//Save in Header Files???
 		switch (response) {
-		case '1':
+		case 0:
+			cout << "\nWhy is this happening???" << endl;
+			system("CLS");
+			continue;
+		case 1:
 			// Jump to Function Record()
+			system("CLS");
 			Record();
 			break;
-		case '2':
-			cout << "Case 2" << endl;
+		case 2:
+			system("CLS");
+			Edit();
 			break;
-		case '3':
-			cout << "Case 3" << endl;
+		case 3:
+			system("CLS");
+			Delete();
 			break;
-		case '4':
-			cout << "Case 4" << endl;
+		case 4:
+			system("CLS");
+			Display();
 			break;
 		default:
-			cout << "Invalid function please enter again: " << endl;
-			continue;
+		{
+			//Error checking
+			system("cls");
+			cout << "\nInvalid input please enter again: " << endl << endl;
+			cin.clear();  //Clear the error flag
+			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  //Discard invalid input
+			Display();
+			break;
+		}
 		}
 	}
 }
 
 void login()
 {
+	//Declare variables
 	int Pass = 0;
 	string User_ID, Password, Record_User_ID, Record_Password;
-	system("cls");
+	//Prompt and get username and password
 	cout << "Please enter the username and pasword:  " << endl;
 	cout << "USERNAME: ";
 	cin >> User_ID;
@@ -106,6 +143,7 @@ void login()
 	cin >> Password;
 	cout << endl;
 
+	//input username and password from login.txt
 	ifstream input("login.txt");
 
 	while (input >> Record_User_ID >> Record_Password)
@@ -117,8 +155,10 @@ void login()
 	}
 	input.close();
 
+	//if username and password same as user id and password in login.txt
 	if (Pass == 1)
 	{
+		//login successful
 		system("cls");
 		cout << "Login Sucessful!\n\n";
 		finance();
@@ -126,6 +166,7 @@ void login()
 	}
 	else
 	{
+		//login error
 		system("cls");
 		cout << "Login Error! \nPlease check your username and password.\n\n";
 		login();
@@ -134,13 +175,16 @@ void login()
 
 void registration()
 {
+	//Declare variables
 	string R_User_ID, R_Password, Record_User_ID, Record_Password;
 	system("cls");
+	//Prompt and get username and password
 	cout << "Enter the username: ";
 	cin >> R_User_ID;
 	cout << "Enter the password: ";
 	cin >> R_Password;
 
+	//insert the username and password into login.txt
 	ofstream f1("login.txt", ios::app);
 	f1 << R_User_ID << " " << R_Password << endl;
 	system("cls");
@@ -150,18 +194,23 @@ void registration()
 
 void forgot()
 {
+	//Declare variable
 	int option;
 	system("cls");
+
+	//Display option
 	cout << "You forgot the password?\n";
 	cout << "Press 1 | Search your ID by username" << endl;
 	cout << "Press 2 | Main Menu" << endl;
 	cout << "\nEnter your option: ";
 	cin >> option;
 
+	//Switch Case
 	switch (option)
 	{
 		case 1:
 		{
+			//User enter the username they remembered
 			int Pass = 0;
 			string Record_User_ID, Record_Password, F_User_ID;
 			cout << "\nEnter the username which you remebered: ";
@@ -170,6 +219,7 @@ void forgot()
 			ifstream f2("login.txt");
 			while (f2 >> Record_User_ID >> Record_Password);
 			{
+				//if username same as username in login.txt
 				if (F_User_ID == Record_User_ID)
 				{
 					Pass = 1;
@@ -178,6 +228,7 @@ void forgot()
 			f2.close();
 			if (Pass == 1)
 			{
+				//Display password
 				cout << "\n\nYour account is found!";
 				cout << "\nYour password: " << Record_Password << endl;
 				main();
@@ -189,27 +240,49 @@ void forgot()
 			}
 			break;
 		}
-
 		case 2:
 		{
+			//back to main
 			main();
 		}
-
 		default:
 		{
-			cout << "Wrong choice! Please try again!" << endl;
-			forgot();
+			//Error checking
+			system("cls");
+			cout << "\nInvalid input please enter again: " << endl << endl;
+			cin.clear();  //Clear the error flag
+			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  //Discard invalid input
+			Display();
+			break;
 		}
 	}
 }
 
-void Record()
-{
+int LineCount() {
+
+	//open text file
+	fstream file;
+	string filename = "Record.txt";
+	file.open(filename, ios::in);
+
+	// Count the number of lines in the file
+	int lineCount = 1;
+	string line;
+	while (getline(file, line)) {
+		lineCount++;
+	}
+	file.close();
+
+	return lineCount;
+}
+
+void Record() {
+
+	system("CLS");
 
 	// Variables for loop
 	bool Exit = false;
 	char Change_Date;
-	string InOrEx;
 
 	time_t now = time(0);
 
@@ -217,11 +290,8 @@ void Record()
 
 	// Variables for User input
 
-	string Date;
+	string Date, Category, Note, InOrEx;
 	float Amount;
-	string Category;
-	string Account;
-	string Note;
 
 	int year = (1900 + ltm->tm_year);
 	int month = (1 + ltm->tm_mon);
@@ -236,7 +306,6 @@ void Record()
 		cout << "You have choosen to exit the Record() Function" << endl;
 		cout << "==================================================" << endl;
 	}
-
 	else
 	{
 		cout << "\n==================================================" << endl;
@@ -271,60 +340,659 @@ void Record()
 			cin >> InOrEx;
 		}
 
-		if (InOrEx != "I" || InOrEx != "i") {
+		if (InOrEx == "I" || InOrEx == "i") {
 			Category = "Income";
 		}
 		else {
 			Category = "Expenses";
 		}
 
+		cin.ignore(256, '\n');
 		cout << "\nNote: " << endl;
-		cin >> Note;
+		getline(cin, Note);
 	}
 
 	// Create or Open a text File
-	// Open the text file and loop the total of rows
-
-	// Create Array
-	string records[4];
-	records[0] = Date;
-	records[1] = Amount;
-	records[2] = Category;
-	records[3] = Note;
-
-	string filename = "Record.txt";
 
 	// Open text file
 	fstream file;
-	file.open(filename, std::ios::in | std::ios::out);
+	string filename = "Record.txt";
+	file.open(filename, ios::in | ios::out | ios::app);
 
 	if (!file.is_open()) {
 		//File doesn't exist, createa new file
-		file.open(filename, std::ios::out);
+		file.open(filename, ios::out);
 		if (!file.is_open()) {
 			std::cerr << "Failed to create or open the file." << endl;
 		}
 	}
 
-	// Count the number of lines in the file
-	int lineCount = (0 / 4);
-	string line;
-	while (getline(file, line)) {
-		lineCount++;
-	}
-	cout << lineCount << endl;
-
-	// Add into text file
-	file.open("Record.txt", ios::app);
-
-	for (int i = 0; i < 4; i++) {
-		file << records[i] << '\n';
-		file.flush();
-	}
-
-	// Close Text File
-	file.close();
+	file << Date << " " << Amount << " " << Category << " " << Note << endl;
 	system("cls");
+	cout << "Adding...";
+
+	// close file
+	file.close();
 	cout << "Record written into file" << endl;
 }
 
+// Function to split a string based on a delimiter
+vector<string> split(const string& str, char delimiter) {
+	vector<string> tokens;
+	size_t start = 0, end = 0;
+	while ((end = str.find(delimiter, start)) != string::npos) {
+		tokens.push_back(str.substr(start, end - start));
+		start = end + 1;
+	}
+	tokens.push_back(str.substr(start));
+	return tokens;
+}
+
+// Function for edit()
+void Edit() {
+
+	fstream file("Record.txt");
+	// Show the array
+	string Date, Category, Note;
+	int Amount;
+	int Count = 0;
+
+	string tempAmount;
+	string Line;
+
+	// Print out Array
+	cout << "\n==================================================" << endl;
+	cout << "\t\tList of Records" << endl;
+	cout << "==================================================" << endl;
+	cout << "No." << "\t" << "Date" << "\t\t" << "Amount" << "\t" << "Category" << "\t" << "Note";
+
+	while (getline(file, Line)) {
+		stringstream ss(Line);
+		getline(ss, Date, ',');
+		Date = Date.substr(0, 4) + "-" + Date.substr(5, 2) + "-" + Date.substr(8, 2);
+		getline(ss, tempAmount, ',');
+		Amount = stoi(tempAmount);
+		getline(ss, Category, ',');
+		getline(ss, Note);
+		// The array itself
+		cout << "\n" << (Count + 1) << "\t" << Date << "\t\t" << Amount << "\t" << Category << "    " << Note;
+		Count++;
+	}
+	file.close();
+
+
+	// The User input
+	string filename = "Record.txt"; // Replace with your file name
+	int rowNumber, fieldIndex;
+	string newValue;
+	char InOrEx;
+
+	cout << "\nEnter the record number to update: ";
+	cin >> rowNumber;
+
+	cout << "Enter the field index to update (1: Date, 2: Amount, 3: Category, 4: Note): ";
+	cin >> fieldIndex;
+
+	switch (fieldIndex) {
+	case 1:
+		cout << "\n Enter new date(YYYY-MM-DD) : ";
+		cin.ignore(); // Clear the newline character from the buffer
+		getline(cin, newValue);
+		break;
+	case 2:
+		cout << "Enter new amount : ";
+		cin.ignore();
+		getline(cin, newValue);
+		break;
+	case 3:
+		cout << "Change category to Income or Expenses(I/E) : ";
+		cin >> InOrEx;
+		if (InOrEx == 'I' || InOrEx == 'i') {
+			newValue = "Income";
+		}
+		if (InOrEx == 'E' || InOrEx == 'e') {
+			newValue = "Expenses";
+		}
+		break;
+	case 4:
+		cout << "Enter new Note: ";
+		cin.ignore(); // Clear the newline character from the buffer
+		getline(cin, newValue);
+		break;
+	}
+
+	cout << newValue << endl;
+
+	// THe Process 
+	ifstream fileIn(filename);
+	ofstream fileOut("temp.txt"); // Temporary file to store modified data
+
+	if (!fileIn || !fileOut) {
+		cerr << "Error opening files." << endl;
+		return;
+	}
+
+	string line;
+	int currentRow = 0;
+	fieldIndex--;
+	while (getline(fileIn, line)) {
+		if (currentRow == (rowNumber - 1)) {
+			vector<string> fields = split(line, ',');
+
+			// Update the specified field
+			if (fieldIndex >= 0 && fieldIndex < fields.size()) {
+				fields[fieldIndex] = newValue;
+			}
+			else {
+				cerr << "Invalid field index." << endl;
+				return;
+			}
+
+			// Reconstruct the modified line
+			string updatedLine = fields[0];
+			for (size_t i = 1; i < fields.size(); ++i) {
+				updatedLine += "," + fields[i];
+			}
+
+			fileOut << updatedLine << endl;
+		}
+		else {
+			fileOut << line << endl;
+		}
+
+		currentRow++;
+	}
+
+	fileIn.close();
+	fileOut.close();
+
+	// Replace the original file with the temporary file
+	remove(filename.c_str());
+	rename("temp.txt", filename.c_str());
+
+	cout << "Field updated successfully." << endl;
+}
+
+// Delete() Function
+void Delete() {
+
+	//Loop through file to get number of rows
+	//Number of rows store into lineCount
+	//get which column user want to delete = j
+	//use array[lineCount][j] to find the position 
+
+	// Open text file
+	fstream file("Record.txt");
+	/*string filename = "Record.txt";*/
+	/*file.open(filename, ios::in);*/
+	if (!file.is_open()) {
+		cout << "No Data present";
+		file.close();
+	}
+	else {
+
+		string Date, Category, Note;
+		int Amount;
+		int Count = 0;
+
+		string tempAmount;
+		string Line;
+
+		// Print out Array
+		cout << "\n==================================================" << endl;
+		cout << "\t\tList of Records" << endl;
+		cout << "==================================================" << endl;
+		cout << "No." << "\t" << "Date" << "\t\t" << "Amount" << "\t" << "Category" << "\t" << "Note";
+
+		while (getline(file, Line)) {
+			stringstream ss(Line);
+			getline(ss, Date, ',');
+			Date = Date.substr(0, 4) + "-" + Date.substr(5, 2) + "-" + Date.substr(8, 2);
+			getline(ss, tempAmount, ',');
+			Amount = stoi(tempAmount);
+			getline(ss, Category, ',');
+			getline(ss, Note);
+			// The array itself
+			cout << "\n" << (Count + 1) << "\t" << Date << "\t\t" << Amount << "\t" << Category << "    " << Note;
+			Count++;
+		}
+		file.close();
+	}
+
+	//Get user response on which record
+
+	cout << "\n\nEnter the number of the following Record you would like to Delete : ";
+	int ResponseNum;
+	cin >> ResponseNum;
+
+	// Delete a line
+	fstream read_file;
+
+	read_file.open("Record.txt");
+
+	if (read_file.fail()) {
+		cout << "Error opening file." << endl;
+	}
+
+	vector <string> lines;
+	string line;
+
+	while (getline(read_file, line))
+		lines.push_back(line);
+
+	read_file.close();
+
+	if (ResponseNum > line.size()) {
+		cout << "Line" << ResponseNum;
+		cout << "not in file" << endl;
+
+		cout << "File has " << lines.size();
+		cout << "lines." << endl;
+
+	}
+
+	ofstream write_file;
+	write_file.open("Record.txt");
+
+	if (write_file.fail()) {
+		cout << "Error opening file" << endl;
+	}
+
+	ResponseNum--;
+	for (int i = 0; i < lines.size(); i++)
+		if (i != ResponseNum)
+			write_file << lines[i] << endl;
+
+	write_file.close();
+}
+
+
+void Display()
+{
+	//Declare variable
+	int option;
+	//Display choice for user to choose to display
+	cout << "Please select to display: \n";
+	cout << "1. Income\n";
+	cout << "2. Expenses\n";
+	cout << "3. Back\n\n";
+	cout << "Please select your choice: ";
+	cin >> option;
+	switch (option)
+	{
+	case 1:
+	{
+		system("cls");
+		Income();
+		break;
+	}
+	case 2:
+	{
+		system("cls");
+		Expenses();
+		break;
+	}
+	case 3:
+	{
+		system("cls");
+		finance();
+		break;
+	}
+	default:
+	{
+		//Error checking
+		system("cls");
+		cout << "\nInvalid input please enter again: " << endl << endl;
+		cin.clear();  //Clear the error flag
+		cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  //Discard invalid input
+		Display();
+		break;
+	}
+	}
+}
+
+void Income()
+{
+	//Decclare variable
+	int inner;
+	//Display choice for user to choose
+	cout << "You are displaying Income\n";
+	cout << "1. Display via Date\n";
+	cout << "2. Display via Account\n";
+	cout << "3. Display Total\n";
+	cout << "4. Back\n\n";
+	cout << "Please select your choice: ";
+	cin >> inner;
+	switch (inner)
+	{
+	case 1:
+	{
+		system("cls");
+		cout << "Display via Date:\n\n";
+		//Declare variables
+		time_t now = time(0);
+		tm* ltm = localtime(&now);
+
+		string back = ""; // to back to display menu
+		int Pass = 0;
+		char Change_Date;
+		string DateStore;
+		string Amount;
+		string CategoryStore;
+		string Note;
+		string Date;
+		string Category = "Income";
+
+		int year = (1900 + ltm->tm_year);
+		int month = (1 + ltm->tm_mon);
+		int day = (ltm->tm_mday);
+
+		//Prompt and get date
+		cout << "Date : " << year << "-" << month << "-" << day << " [Correct date?](Y/N) : ";
+		cin >> Change_Date;
+		// Cheack if users want to change the date. If so 
+		if (Change_Date == 'Y' || Change_Date == 'y')
+		{
+			string temp = to_string(year) + "-" + to_string(month) + "-" + to_string(day);
+			Date = temp;
+		}
+		else
+		{
+			cout << "You have chosen to change the date." << endl;
+			cout << "Enter your Date (YYYY-MM-DD): ";
+			cin >> Date;
+		}
+
+		cout << "\n";
+
+		//Compare date and the date store in text file
+		ifstream input("Record.txt");
+
+		while (input >> DateStore >> Amount >> CategoryStore >> Note)
+		{
+			if (DateStore == Date && CategoryStore == Category)
+			{
+				Pass = 1;
+			}
+
+			if (Pass == 1)
+			{
+				//Display the income
+				cout << std::left << DateStore << std::right << "     " << Amount << std::left << "     " << CategoryStore << "\t   " << Note << "\n";
+				Pass = 0;
+			}
+		}
+		input.close();
+
+		Pass = 2;
+		if (Pass == 2)
+		{
+			//Case where no income is found for the date
+			cout << "\nNo more income found for the specified date.\n\n";
+		}
+
+		do
+		{
+			// Ask the user whether to continue
+			std::cout << "Back? (Y/N): ";
+			std::cin >> back;
+
+		} while (back != "Y" && back != "y");
+
+		Income();
+
+		break;
+	}
+	case 2:
+	{
+		system("cls");
+		cout << "Display via Category:\n\n";
+		//Declare variables
+		char back = 0;
+		int Pass = 0;
+		string DateStore;
+		string Amount;
+		string CategoryStore;
+		string Note;
+		string Category = "Income";
+		//?????
+		break;
+	}
+	case 3:
+	{
+		system("cls");
+		cout << "Display Total:\n\n";
+		//Declare variables
+		string back = "";
+		int Pass = 0;
+		string DateStore;
+		string Amount;
+		string CategoryStore;
+		string Note;
+		float total = 0;
+		string Category = "Income";
+
+		//Compare date and the date store in text file
+		ifstream input("Record.txt");
+
+		while (input >> DateStore >> Amount >> CategoryStore >> Note)
+		{
+			if (CategoryStore == Category)
+			{
+				//Display the income
+				cout << std::left << DateStore << std::right << "     " << Amount << std::left << "     " << CategoryStore << "\t   " << Note << "\n";
+				total += std::stof(Amount);
+			}
+		}
+		input.close();
+
+		float round = std::round(total * 100) / 100;
+		cout << "\nTotal of Expenses: " << std::to_string(round) << "\n\n";
+
+		do
+		{
+			// Ask the user whether to continue
+			std::cout << "Back? (Y/N): ";
+			std::cin >> back;
+
+		} while (back != "Y" && back != "y");
+
+		Income();
+
+		break;
+	}
+	case 4:
+	{
+		system("cls");
+		Display();
+	}
+	default:
+	{
+		//Error checking
+		system("cls");
+		cout << "\nInvalid input please enter again: " << endl << endl;
+		cin.clear();  //Clear the error flag
+		cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  //Discard invalid input
+		Income();
+		break;
+	}
+	}
+}
+
+void Expenses()
+{
+	//Decclare variable
+	int inner;
+
+	//Display choice for user to choose
+	cout << "You are displaying Expenses\n";
+	cout << "1. Display via Date\n";
+	cout << "2. Display via Account\n";
+	cout << "3. Display Total\n";
+	cout << "4. Display Prediction\n";
+	cout << "5. Back\n\n";
+	cout << "Please select your choice: ";
+	cin >> inner;
+	cout << "\n";
+	switch (inner)
+	{
+	case 1:
+	{
+		system("cls");
+		cout << "Display via Date:\n\n";
+		//Declare variables
+		time_t now = time(0);
+		tm* ltm = localtime(&now);
+
+		string back = "";
+		int Pass = 0;
+		char Change_Date;
+		string DateStore;
+		string Amount;
+		string CategoryStore;
+		string Note;
+		string Date;
+		string Category = "Expenses";
+
+		int year = (1900 + ltm->tm_year);
+		int month = (1 + ltm->tm_mon);
+		int day = (ltm->tm_mday);
+		cout << "\n";
+
+		//Prompt and get date
+		cout << "Date: " << year << "-" << month << "-" << day << " [Correct date?](Y/N) : ";
+		cin >> Change_Date;
+		// Cheack if users want to change the date. If so 
+		if (Change_Date == 'Y' || Change_Date == 'y')
+		{
+			string temp = to_string(year) + "-" + to_string(month) + "-" + to_string(day);
+			Date = temp;
+		}
+		else
+		{
+			cout << "Enter your Date (YYYY-MM-DD): ";
+			cin >> Date;
+		}
+
+		cout << "\n";
+
+		//Compare date and the date store in text file
+		ifstream input("Record.txt");
+
+		while (input >> DateStore >> Amount >> CategoryStore >> Note)
+		{
+			if (DateStore == Date && CategoryStore == Category)
+			{
+				Pass = 1;
+			}
+
+			if (Pass == 1)
+			{
+				//Display the expenses
+				cout << std::left << DateStore << std::right << "     " << Amount << std::left << "     " << CategoryStore << "\t   " << Note << "\n";
+				Pass = 0;
+			}
+		}
+		input.close();
+
+		Pass = 2;
+		if (Pass == 2)
+		{
+			//Case where no expenses is found for the date
+			cout << "\nNo more income found for the specified date.\n";
+		}
+
+		do
+		{
+			// Ask the user whether to continue
+			std::cout << "Back? (Y/N): ";
+			std::cin >> back;
+
+		} while (back != "Y" && back != "y");
+
+		Expenses();
+
+		break;
+	}
+	case 2:
+	{
+		system("cls");
+		cout << "Display via Category:\n\n";
+		//Declare variables
+		int Pass = 0;
+		string DateStore;
+		string Amount;
+		string CategoryStore;
+		string Note;
+		string Category = "Expenses";
+		//?????
+		break;
+	}
+	case 3:
+	{
+		system("cls");
+		cout << "Display Total:\n\n";
+
+		//Declare variables
+		string back = "";
+		int Pass = 0;
+		string DateStore;
+		string Amount;
+		string CategoryStore;
+		string Note;
+		float total = 0;
+		string Category = "Expenses";
+
+		//Compare date and the date store in text file
+		ifstream input("Record.txt");
+
+		while (input >> DateStore >> Amount >> CategoryStore)
+		{
+			std::getline(input, Note);
+
+			if (CategoryStore == Category)
+			{
+				//Display the income
+				cout << std::left << DateStore << std::right << "     " << Amount << std::left << "     " << CategoryStore << "\t   " << Note << "\n";
+				total += std::stof(Amount);
+
+			}
+		}
+		input.close();
+
+		float round = std::round(total * 100) / 100;
+		cout << "\nTotal of Expenses: " << std::to_string(round) << "\n\n";
+
+		do
+		{
+			// Ask the user whether to continue
+			std::cout << "Back? (Y/N): ";
+			std::cin >> back;
+
+		} while (back != "Y" && back != "y");
+
+		Expenses();
+
+		break;
+	}
+	case 4:
+	{
+		//Prediction()
+	}
+	case 5:
+	{
+		system("cls");
+		Display();
+	}
+	default:
+	{
+		//Error checking
+		system("cls");
+		cout << "\nInvalid input please enter again: " << endl << endl;
+		cin.clear();  //Clear the error flag
+		cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  //Discard invalid input
+		Expenses();
+		break;
+	}
+	}
+}
