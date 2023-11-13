@@ -130,175 +130,144 @@ void Record() {
 
 }
 
-//
-//// ---------------------------------------------------------------Entire Edit()
-//
-//// Function for edit()
-//// Make Records
-//typedef struct {
-//	string recordNum;
-//	string date;
-//	int amount; 
-//	string category;
-//	string note;
-//}Record;
-//
-//void printTable(const vector<Record>& records) {
-//	vector<Record> Records;
-//
-//	// Print table header
-//	cout << setw(6) << "Record Number"
-//		<< setw(8) << "Date"
-//		<< setw(8) << "Amount"
-//		<< setw(8) << "Category"
-//		<< "Note\n";
-//
-//	// Print each record with index
-//	for (size_t i = 0; i < (records.size()); ++i) {
-//		const Record& record = records[i];
-//		cout << setw(6) << i + 1
-//			<< setw(8) << record.date
-//			<< setw(8) << record.amount
-//			<< setw(8) << record.category
-//			<< record.note << "\n";
-//	}
-//}
-//
-//
-//void Edit() {
-//
-//	//Initialize
-//
-//
-//	// Open and read file
-//	// Loop through all record
-//	/*
-//	fstream file;
-//	string filename = "Record.txt";
-//	file.open(filename, ios::in);
-//
-//	// Count the number of lines in the file
-//	int lineCount = 1;
-//	string line;
-//	while (getline(file, line)) {
-//		lineCount++;
-//	}
-//	*/
-//
-//	// Display The elements inside the record
-//	std::ifstream inputFile("Record.txt");
-//
-//	if (!inputFile) {
-//		std::cerr << "Error opening the file." << std::endl;
-//	}
-//
-//	vector<Record> records;
-//	string line;
-//
-//	while (getline(inputFile, line)) {
-//		istringstream iss(line);
-//		string token;
-//
-//		Record record;
-//
-//		// Read and split the line using ',' as delimiter
-//		getline(iss, token, ',');
-//		record.date = token;
-//
-//		std::getline(iss, token, ',');
-//		record.amount = std::stoi(token);
-//
-//		std::getline(iss, token, ',');
-//		record.category = token;
-//
-//		std::getline(iss, token, ',');
-//		record.note = token;
-//
-//		records.push_back(record);
-//	}
-//
-//	// Close the file after reading
-//	inputFile.close();
-//
-//	// Print the transactions in table form with index
-//	printTable(records);
-//	
-//
-//	/*ifstream file("Record.txt");
-//
-//	// Check if file Exist, if not jump back to selection page
-//	if (!file.is_open()) {
-//		std::cerr << "Failed to create or open the file." << endl;
-//	}
-//
-//	// Loop through all lines using count to seperate the rows
-//	int count = 1;
-//	int RecordCout = 1;
-//	string templine;
-//
-//	cout << "\nRecord " << RecordCout << " : ";
-//	for (string line; getline(file, line);) {
-//		
-//		templine = file.eof();
-//
-//		if (count % 4 == 0 && line != templine) {
-//			RecordCout++;
-//			cout << line << "\n";
-//			count++;
-//			cout << "Record " << RecordCout << " : ";
-//		}
-//
-//		else {
-//			cout << line << " ";
-//			count ++;
-//		}
-//
-//	}
-//
-//	file.close();
-//	*/
-//
-//
-//	// Get user response on which record
-//	int ResponseNum;
-//	int WhichArray;
-//
-//	cout << "\n==================================================" << endl;
-//	cout << "Enter the number of the following line you would like to edit" << endl;
-//	cout << "==================================================" << endl;
-//	cout << "Which record number : ";
-//	cin >> ResponseNum;
-//
-//
-//	cout << "\n==================================================" << endl;
-//	cout << "What would you like to change ?";
-//	cout << "==================================================" << endl;
-//	cout << "1. Date";
-//	cout << "2. Amount";
-//	cout << "3. Category";
-//	cout << "4. Note" << endl;
-//	cin >> WhichArray;
-//
-//
-//}
-//// ---------------------------------------------------------------Entire Edit()
-
-
-// Delete() Function
-
-// For single character delimiter
-std::vector<std::string> split(const std::string& s, char delim) {
-	std::vector<std::string> result;
-	std::stringstream ss(s);
-	std::string item;
-
-	while (getline(ss, item, delim)) {
-		result.push_back(item);
+// Function to split a string based on a delimiter
+vector<string> split(const string& str, char delimiter) {
+	vector<string> tokens;
+	size_t start = 0, end = 0;
+	while ((end = str.find(delimiter, start)) != string::npos) {
+		tokens.push_back(str.substr(start, end - start));
+		start = end + 1;
 	}
-
-	return result;
+	tokens.push_back(str.substr(start));
+	return tokens;
 }
 
+// Function for edit()
+void Edit() {
+
+	fstream file("Record.txt");
+	// Show the array
+	string Date, Category, Note;
+	int Amount;
+	int Count = 0;
+
+	string tempAmount;
+	string Line;
+
+	// Print out Array
+	cout << "\n==================================================" << endl;
+	cout << "\t\tList of Records" << endl;
+	cout << "==================================================" << endl;
+	cout << "No." << "\t" << "Date" << "\t\t" << "Amount" << "\t" << "Category" << "\t" << "Note";
+
+	while (getline(file, Line)) {
+		stringstream ss(Line);
+		getline(ss, Date, ',');
+		Date = Date.substr(0, 4) + "-" + Date.substr(5, 2) + "-" + Date.substr(8, 2);
+		getline(ss, tempAmount, ',');
+		Amount = stoi(tempAmount);
+		getline(ss, Category, ',');
+		getline(ss, Note);
+		// The array itself
+		cout << "\n" << (Count + 1) << "\t" << Date << "\t\t" << Amount << "\t" << Category << "    " << Note;
+		Count++;
+	}
+	file.close();
+
+
+	// The User input
+	string filename = "Record.txt"; // Replace with your file name
+	int rowNumber, fieldIndex;
+	string newValue;
+	char InOrEx;
+
+	cout << "\nEnter the record number to update: ";
+	cin >> rowNumber;
+
+	cout << "Enter the field index to update (1: Date, 2: Amount, 3: Category, 4: Note): ";
+	cin >> fieldIndex;
+
+	switch (fieldIndex) {
+		case 1:
+			cout << "\n Enter new date(YYYY-MM-DD) : ";
+			cin.ignore(); // Clear the newline character from the buffer
+			getline(cin, newValue);
+			break;
+		case 2:
+			cout << "Enter new amount : ";
+			cin.ignore();
+			getline(cin, newValue);
+			break;
+		case 3:
+			cout << "Change category to Income or Expenses(I/E) : ";
+			cin >> InOrEx;
+			if(InOrEx == 'I' || InOrEx == 'i') {
+				newValue = "Income";
+			}
+			if (InOrEx == 'E' || InOrEx == 'e') {
+				newValue = "Expenses";
+			}
+			break;
+		case 4:
+			cout << "Enter new Note: ";
+			cin.ignore(); // Clear the newline character from the buffer
+			getline(cin, newValue);
+			break;
+	}
+
+	cout << newValue << endl;
+
+	// THe Process 
+	ifstream fileIn(filename);
+	ofstream fileOut("temp.txt"); // Temporary file to store modified data
+
+	if (!fileIn || !fileOut) {
+		cerr << "Error opening files." << endl;
+		return;
+	}
+
+	string line;
+	int currentRow = 0;
+	fieldIndex--;
+	while (getline(fileIn, line)) {
+		if (currentRow == (rowNumber - 1)) {
+			vector<string> fields = split(line, ',');
+
+			// Update the specified field
+			if (fieldIndex >= 0 && fieldIndex < fields.size()) {
+				fields[fieldIndex] = newValue;
+			}
+			else {
+				cerr << "Invalid field index." << endl;
+				return;
+			}
+
+			// Reconstruct the modified line
+			string updatedLine = fields[0];
+			for (size_t i = 1; i < fields.size(); ++i) {
+				updatedLine += "," + fields[i];
+			}
+
+			fileOut << updatedLine << endl;
+		}
+		else {
+			fileOut << line << endl;
+		}
+
+		currentRow++;
+	}
+
+	fileIn.close();
+	fileOut.close();
+
+	// Replace the original file with the temporary file
+	remove(filename.c_str());
+	rename("temp.txt", filename.c_str());
+
+	cout << "Field updated successfully." << endl;
+}
+
+// Delete() Function
 
 void Delete() {
 
@@ -316,32 +285,6 @@ void Delete() {
 		file.close();
 	}
 	else{
-		////allocate the array
-		//string** record = new string * [lineCount];
-		//for (int i = 0; i < lineCount; i++)
-		//	record[i] = new string[4];
-
-
-		//// Use the array
-		//int j = 0;
-		//for (string line; getline(file, line);) {
-		//	templine = file.eof();
-
-		//	string str = line;
-		//	vector <string> v = split(str, ',');
-
-		//	for (auto e : v) record[lineCount][j] = e;
-		//	j++;
-		//}
-
-		////deallocate the array
-		//for (int i = 0; i < lineCount; i++)
-		//	delete[] record[i];
-		//delete[] record;
-
-		//// Close file
-		//file.close();
-		//cout << "Record written into array......" << endl;
 
 		string Date, Category, Note;
 		int Amount;
@@ -359,7 +302,7 @@ void Delete() {
 		while (getline(file, Line)) {
 			stringstream ss(Line);
 			getline(ss, Date, ',');
-			Date = Date.substr(0, 4) +"-"+ Date.substr(5, 2) + "-" + Date.substr(9, 2);
+			Date = Date.substr(0, 4) +"-"+ Date.substr(5, 2) + "-" + Date.substr(8, 2);
 			getline(ss, tempAmount, ',');
 			Amount = stoi(tempAmount);
 			getline(ss, Category, ',');
@@ -416,11 +359,6 @@ void Delete() {
 			write_file << lines[i] << endl;
 
 	write_file.close();
-
-
-
-
-
 }
 
 
@@ -458,8 +396,7 @@ int main()
 				Record();
 				break;
 			case '2':
-				cout << "case 2";
-				//Edit();
+				Edit();
 				system("CLS");
 				break;
 			case '3':

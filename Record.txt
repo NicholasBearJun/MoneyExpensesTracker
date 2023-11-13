@@ -1,4 +1,3 @@
 2023-11-10,12,Expenses,buy maggi
 2023-11-11,5,Income,wash car
-2023-11-12,10,Expenses,buy a soul
-2023-11-14,20,Income,Sold my life
+2023-11-12,2023-22-10,Expenses,Buy something
