@@ -21,14 +21,15 @@ void Delete();
 void Display();
 void Income();
 void Expenses();
+void Prediction();
 
 int main()
 {
 	int c;
 	//Display option for user to choose
-	cout << "______________________________________________________________________________\n\n\n";
-	cout << "                           WELCOME TO LOGIN PAGE\n\n\n";
-	cout << "______________________________________________________________________________\n\n";
+	cout << "==============================================================================\n\n";
+	cout << "                           WELCOME TO LOGIN PAGE\n\n";
+	cout << "==============================================================================\n\n";
 	cout << "                           Press 1 | LOGIN\n";
 	cout << "                           Press 2 | REGISTER\n";
 	cout << "                           Press 3 | Forgot Password\n";
@@ -408,14 +409,14 @@ void Edit() {
 
 	while (getline(file, Line)) {
 		stringstream ss(Line);
-		getline(ss, Date, ',');
+		getline(ss, Date, ' ');
 		Date = Date.substr(0, 4) + "-" + Date.substr(5, 2) + "-" + Date.substr(8, 2);
-		getline(ss, tempAmount, ',');
+		getline(ss, tempAmount, ' ');
 		Amount = stoi(tempAmount);
-		getline(ss, Category, ',');
+		getline(ss, Category, ' ');
 		getline(ss, Note);
 		// The array itself
-		cout << "\n" << (Count + 1) << "\t" << Date << "\t\t" << Amount << "\t" << Category << "    " << Note;
+		cout << "\n" << (Count + 1) << std::left << Date << std::right << "     " << Amount << std::left << "     " << Category << "\t   " << Note << "\n";
 		Count++;
 	}
 	file.close();
@@ -491,7 +492,7 @@ void Edit() {
 			// Reconstruct the modified line
 			string updatedLine = fields[0];
 			for (size_t i = 1; i < fields.size(); ++i) {
-				updatedLine += "," + fields[i];
+				updatedLine += " " + fields[i];
 			}
 
 			fileOut << updatedLine << endl;
@@ -546,11 +547,11 @@ void Delete() {
 
 		while (getline(file, Line)) {
 			stringstream ss(Line);
-			getline(ss, Date, ',');
+			getline(ss, Date, ' ');
 			Date = Date.substr(0, 4) + "-" + Date.substr(5, 2) + "-" + Date.substr(8, 2);
-			getline(ss, tempAmount, ',');
+			getline(ss, tempAmount, ' ');
 			Amount = stoi(tempAmount);
-			getline(ss, Category, ',');
+			getline(ss, Category, ' ');
 			getline(ss, Note);
 			// The array itself
 			cout << "\n" << (Count + 1) << "\t" << Date << "\t\t" << Amount << "\t" << Category << "    " << Note;
@@ -612,7 +613,7 @@ void Display()
 	//Declare variable
 	int option;
 	//Display choice for user to choose to display
-	cout << "Please select to display: \n";
+	cout << "Please select category to display: \n";
 	cout << "1. Income\n";
 	cout << "2. Expenses\n";
 	cout << "3. Back\n\n";
@@ -682,6 +683,7 @@ void Income()
 		string Note;
 		string Date;
 		string Category = "Income";
+		int Count = 0;
 
 		int year = (1900 + ltm->tm_year);
 		int month = (1 + ltm->tm_mon);
@@ -698,18 +700,23 @@ void Income()
 		}
 		else
 		{
-			cout << "You have chosen to change the date." << endl;
+			cout << "\nYou have chosen to change the date." << endl;
 			cout << "Enter your Date (YYYY-MM-DD): ";
 			cin >> Date;
 		}
 
-		cout << "\n";
+		cout << "\n\n==================================================" << endl;
+		cout << "\t\tList of Records" << endl;
+		cout << "==================================================" << endl;
+		cout << "No." << std::left << "      " << "Date" << std::right << "      " << "Amount" << std::left << "   " << "Category" << "\t   " << "Note\n";
 
 		//Compare date and the date store in text file
 		ifstream input("Record.txt");
 
-		while (input >> DateStore >> Amount >> CategoryStore >> Note)
+		while (input >> DateStore >> Amount >> CategoryStore)
 		{
+			std::getline(input, Note);
+
 			if (DateStore == Date && CategoryStore == Category)
 			{
 				Pass = 1;
@@ -718,7 +725,8 @@ void Income()
 			if (Pass == 1)
 			{
 				//Display the income
-				cout << std::left << DateStore << std::right << "     " << Amount << std::left << "     " << CategoryStore << "\t   " << Note << "\n";
+				cout << (Count + 1) << std::left << "     " << Date << std::right << "     " << Amount << std::left << "     " << Category << "\t   " << Note << "\n";
+				Count++;
 				Pass = 0;
 			}
 		}
@@ -739,6 +747,7 @@ void Income()
 
 		} while (back != "Y" && back != "y");
 
+		system("cls");
 		Income();
 
 		break;
@@ -761,7 +770,7 @@ void Income()
 	case 3:
 	{
 		system("cls");
-		cout << "Display Total:\n\n";
+		cout << "Display Total:\n";
 		//Declare variables
 		string back = "";
 		int Pass = 0;
@@ -771,23 +780,31 @@ void Income()
 		string Note;
 		float total = 0;
 		string Category = "Income";
+		int Count = 0;
+
+		cout << "\n==================================================" << endl;
+		cout << "\t\tList of Records" << endl;
+		cout << "==================================================" << endl;
+		cout << "No." << std::left << "      " << "Date" << std::right << "      " << "Amount" << std::left << "   " << "Category" << "\t   " << "Note\n";
 
 		//Compare date and the date store in text file
 		ifstream input("Record.txt");
 
-		while (input >> DateStore >> Amount >> CategoryStore >> Note)
+		while (input >> DateStore >> Amount >> CategoryStore)
 		{
+			std::getline(input, Note);
+
 			if (CategoryStore == Category)
 			{
 				//Display the income
-				cout << std::left << DateStore << std::right << "     " << Amount << std::left << "     " << CategoryStore << "\t   " << Note << "\n";
+				cout << (Count + 1) << std::left << DateStore << std::right << "     " << Amount << std::left << "     " << Category << "\t   " << Note << "\n";
+				Count++;
 				total += std::stof(Amount);
 			}
 		}
 		input.close();
 
-		float round = std::round(total * 100) / 100;
-		cout << "\nTotal of Expenses: " << std::to_string(round) << "\n\n";
+		cout << "\nTotal of Income: RM" << std::fixed << std::setprecision(2) << total << "\n\n";
 
 		do
 		{
@@ -797,6 +814,7 @@ void Income()
 
 		} while (back != "Y" && back != "y");
 
+		system("cls");
 		Income();
 
 		break;
@@ -853,14 +871,14 @@ void Expenses()
 		string Note;
 		string Date;
 		string Category = "Expenses";
+		int Count = 0;
 
 		int year = (1900 + ltm->tm_year);
 		int month = (1 + ltm->tm_mon);
 		int day = (ltm->tm_mday);
-		cout << "\n";
 
 		//Prompt and get date
-		cout << "Date: " << year << "-" << month << "-" << day << " [Correct date?](Y/N) : ";
+		cout << "\nDate: " << year << "-" << month << "-" << day << " [Correct date?](Y/N) : ";
 		cin >> Change_Date;
 		// Cheack if users want to change the date. If so 
 		if (Change_Date == 'Y' || Change_Date == 'y')
@@ -870,17 +888,23 @@ void Expenses()
 		}
 		else
 		{
+			cout << "\nYou have chosen to change the date." << endl;
 			cout << "Enter your Date (YYYY-MM-DD): ";
 			cin >> Date;
 		}
 
-		cout << "\n";
+		cout << "\n\n==================================================" << endl;
+		cout << "\t\tList of Records" << endl;
+		cout << "==================================================" << endl;
+		cout << "No." << std::left << "      " << "Date" << std::right << "      " << "Amount" << std::left << "   " << "Category" << "\t   " << "Note\n";
 
 		//Compare date and the date store in text file
 		ifstream input("Record.txt");
 
-		while (input >> DateStore >> Amount >> CategoryStore >> Note)
+		while (input >> DateStore >> Amount >> CategoryStore)
 		{
+			std::getline(input, Note);
+
 			if (DateStore == Date && CategoryStore == Category)
 			{
 				Pass = 1;
@@ -889,7 +913,8 @@ void Expenses()
 			if (Pass == 1)
 			{
 				//Display the expenses
-				cout << std::left << DateStore << std::right << "     " << Amount << std::left << "     " << CategoryStore << "\t   " << Note << "\n";
+				cout << (Count + 1) << std::left << Date << std::right << "     " << Amount << std::left << "     " << Category << "\t   " << Note << "\n";
+				Count++;
 				Pass = 0;
 			}
 		}
@@ -910,6 +935,7 @@ void Expenses()
 
 		} while (back != "Y" && back != "y");
 
+		system("cls");
 		Expenses();
 
 		break;
@@ -931,7 +957,7 @@ void Expenses()
 	case 3:
 	{
 		system("cls");
-		cout << "Display Total:\n\n";
+		cout << "Display Total:\n";
 
 		//Declare variables
 		string back = "";
@@ -942,6 +968,12 @@ void Expenses()
 		string Note;
 		float total = 0;
 		string Category = "Expenses";
+		int Count = 0;
+
+		cout << "\n==================================================" << endl;
+		cout << "\t\tList of Records" << endl;
+		cout << "==================================================" << endl;
+		cout << "No." << std::left << "      " << "Date" << std::right << "      " << "Amount" << std::left << "   " << "Category" << "\t   " << "Note\n";
 
 		//Compare date and the date store in text file
 		ifstream input("Record.txt");
@@ -952,16 +984,16 @@ void Expenses()
 
 			if (CategoryStore == Category)
 			{
-				//Display the income
-				cout << std::left << DateStore << std::right << "     " << Amount << std::left << "     " << CategoryStore << "\t   " << Note << "\n";
+				//Display the expenses
+				cout << (Count + 1) << std::left << DateStore << std::right << "     " << Amount << std::left << "     " << Category << "\t   " << Note << "\n";
+				Count++;
 				total += std::stof(Amount);
 
 			}
 		}
 		input.close();
 
-		float round = std::round(total * 100) / 100;
-		cout << "\nTotal of Expenses: " << std::to_string(round) << "\n\n";
+		cout << "\nTotal of Expenses: RM" << std::fixed << std::setprecision(2) << total << "\n\n";
 
 		do
 		{
@@ -971,13 +1003,14 @@ void Expenses()
 
 		} while (back != "Y" && back != "y");
 
+		system("cls");
 		Expenses();
 
 		break;
 	}
 	case 4:
 	{
-		//Prediction()
+		Prediction();
 	}
 	case 5:
 	{
@@ -995,4 +1028,372 @@ void Expenses()
 		break;
 	}
 	}
+}
+
+void Prediction()
+{
+	system("cls");
+	cout << "Display Prediction:\n\n";
+	//Declare variables
+	time_t now = time(0);
+	tm* ltm = localtime(&now);
+
+	string back = "";
+	int Pass = 0;
+	string DateStore;
+	string Amount;
+	string CategoryStore;
+	string Note;
+	string Date;
+	string predict;
+	string Category = "Expenses";
+	int option;
+
+	int year = (1900 + ltm->tm_year);
+	int month = (1 + ltm->tm_mon);
+	int day = (ltm->tm_mday);
+
+	cout << "1. Daily\n";
+	cout << "2. Monthly\n";
+	cout << "3. Annually\n";
+	cout << "4. Back\n\n";
+	cout << "Please select your choice: ";
+	cin >> option;
+
+	switch (option)
+	{
+	case 1:
+	{
+		int month;
+		float i = 0;
+		float sum = 0.0f;
+		float average;
+		string SMonth;
+		int Count = 0;
+		cout << "\nPlease select a month (1 to 12): \n";
+		cout << "1.  January\n";
+		cout << "2.  February\n";
+		cout << "3.  March\n";
+		cout << "4.  April\n";
+		cout << "5.  May\n";
+		cout << "6.  June\n";
+		cout << "7.  July\n";
+		cout << "8.  August\n";
+		cout << "9.  September\n";
+		cout << "10. October\n";
+		cout << "11. November\n";
+		cout << "12. December\n\n";
+		cout << "Please select your choice: ";
+		cin >> month;
+
+		switch (month)
+		{
+		case 1:
+		{
+			SMonth = "01";
+			break;
+		}
+		case 2:
+		{
+			SMonth = "02";
+			break;
+		}
+		case 3:
+		{
+			SMonth = "03";
+			break;
+		}
+		case 4:
+		{
+			SMonth = "04";
+			break;
+		}
+		case 5:
+		{
+			SMonth = "05";
+			break;
+		}
+		case 6:
+		{
+			SMonth = "06";
+			break;
+		}
+		case 7:
+		{
+			SMonth = "07";
+			break;
+		}
+		case 8:
+		{
+			SMonth = "08";
+			break;
+		}
+		case 9:
+		{
+			SMonth = "09";
+			break;
+		}
+		case 10:
+		{
+			SMonth = "10";
+			break;
+		}
+		case 11:
+		{
+			SMonth = "11";
+			break;
+		}
+		case 12:
+		{
+			SMonth = "12";
+			break;
+		}
+		default:
+		{
+			//Error checking
+			system("cls");
+			cout << "\nInvalid input please enter again: " << endl << endl;
+			cin.clear();  //Clear the error flag
+			cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  //Discard invalid input
+			Expenses();
+			break;
+		}
+		}
+
+		cout << "\n\n==================================================" << endl;
+		cout << "\t\tList of Records" << endl;
+		cout << "==================================================" << endl;
+		cout << "No." << std::left << "      " << "Date" << std::right << "      " << "Amount" << std::left << "   " << "Category" << "\t   " << "Note\n";
+
+		string MonthStore;
+
+		//Compare date and the date store in text file
+		ifstream input("Record.txt");
+
+		while (input >> DateStore >> Amount >> CategoryStore)
+		{
+			std::getline(input, Note);
+
+			std::string MonthStore = DateStore.substr(5, 2); //Extract month
+
+			if (CategoryStore == Category && MonthStore == SMonth)
+			{
+				Pass = 1;
+			}
+
+			if (Pass == 1)
+			{
+				//Display the prediction
+				cout << (Count + 1) << std::left << Date << std::right << "     " << Amount << std::left << "     " << Category << "\t   " << Note << "\n";
+				Count++;
+				sum += stof(Amount);
+				Pass = 0;
+				i += 1;
+			}
+		}
+		input.close();
+
+		average = sum / i;
+		cout << "\nDaily used in month (" << SMonth << "): RM" << std::fixed << std::setprecision(2) << average << "\n\n";
+
+		do
+		{
+			// Ask the user whether to continue
+			std::cout << "Back? (Y/N): ";
+			std::cin >> back;
+
+		} while (back != "Y" && back != "y");
+
+		system("cls");
+		Prediction();
+
+		break;
+	}
+	case 2:
+	{
+		string MonthStore;
+		string SYear;
+		string YearStore;
+		float monthly[13] = { 0.0f };
+		float sum = 0.0f;
+		float average;
+		int Count = 0;
+
+		cout << "\nPlease insert a year: ";
+		cin >> SYear;
+
+		cout << "\n\n==================================================" << endl;
+		cout << "\t\tList of Records" << endl;
+		cout << "==================================================" << endl;
+		cout << "No." << std::left << "      " << "Date" << std::right << "      " << "Amount" << std::left << "   " << "Category" << "\t   " << "Note\n";
+
+		//Compare date and the date store in text file
+		ifstream input("Record.txt");
+
+		while (input >> DateStore >> Amount >> CategoryStore)
+		{
+			std::getline(input, Note);
+
+			std::string YearStore = DateStore.substr(0, 4); //Extract year
+			std::string MonthStore = DateStore.substr(5, 2); //Extract month
+
+			for (int j = 1; j < 13; j++)
+			{
+				if (CategoryStore == Category && stoi(MonthStore) == j && YearStore == SYear)
+				{
+					Pass = 1;
+				}
+
+				if (Pass == 1)
+				{
+					//Display the prediction
+					cout << (Count + 1) << std::left << DateStore << std::right << "     " << Amount << std::left << "     " << Category << "\t   " << Note << "\n";
+					Count++;
+					monthly[j] += stof(Amount);
+					Pass = 0;
+				}
+			}
+		}
+		input.close();
+
+		cout << "\n";
+
+		for (int k = 1; k < 13; k++)
+		{
+			cout << "Month (" << k << "): RM" << monthly[k] << endl;
+			sum += monthly[k];
+		}
+
+		average = sum / 12;
+		cout << "\nMonthly used in (" << SYear << "): RM" << std::fixed << std::setprecision(2) << average << "\n\n";
+
+		do
+		{
+			// Ask the user whether to continue
+			std::cout << "Back? (Y/N): ";
+			std::cin >> back;
+
+		} while (back != "Y" && back != "y");
+
+		system("cls");
+		Prediction();
+			
+		break;
+	}
+	case 3:
+	{
+		int Year1;
+		int Year2;
+		int range = 0;
+		int Count = 0;
+
+		//Range of Year to Predict
+		cout << "\nRange of year to predict next year expenses\n";
+		cout << "Please insert the starting year: ";
+		cin >> Year1;
+		cout << "Until?: ";
+		cin >> Year2;
+		if (Year2 > Year1)
+		{
+			range = Year2 - Year1;
+		}
+		else
+		{
+			system("cls");
+			cout << "\nSecond Year must larger than First Year provided!";
+			Prediction();
+
+		}
+
+		float annual[10000] = { 0.0f };
+		int tempYear = Year1;
+		float sum = 0.0f;
+		float average = 0;
+
+		//Compare date and the date store in text file
+		ifstream input("Record.txt");
+
+
+		for (int j = 0; j <= range; j++)
+		{
+			//Reset file pointer to the beginning for each year
+			input.clear(); //Clear any error flags
+			input.seekg(0, ios::beg);
+
+			while (input >> DateStore >> Amount >> CategoryStore)
+			{
+				std::getline(input, Note);
+
+				string YearStore = DateStore.substr(0, 4); //Extract year
+
+				if (CategoryStore == Category && stoi(YearStore) == tempYear)
+				{
+					Pass = 1;
+				}
+
+				if (Pass == 1)
+				{
+					//Display the prediction
+					Count++;
+					annual[j] += stof(Amount);
+					Pass = 0;
+				}
+			}
+
+			if (tempYear != Year2)
+			{
+				tempYear += 1;
+			}
+			else
+			{
+				break;
+			}
+		}
+		input.close();
+
+		cout << "\n";
+		tempYear = Year1;
+
+		for (int k = 0; k <= range; k++)
+		{
+			cout << "Year " << tempYear << ": RM" << annual[k] << endl;
+			sum += annual[k];
+			if (tempYear != Year2)
+			{
+				tempYear += 1;
+			}
+		}
+
+		average = sum / (range + 1);
+		cout << "\nAnnually used in (" << Year1 << " to " << Year2 << "): RM" << std::fixed << std::setprecision(2) << average << "\n\n";
+
+		do
+		{
+			// Ask the user whether to continue
+			std::cout << "Back? (Y/N): ";
+			std::cin >> back;
+
+		} while (back != "Y" && back != "y");
+
+		system("cls");
+		Prediction();
+
+		break;
+	}
+	case 4:
+	{
+		system("cls");
+		Display();
+	}
+	default:
+	{
+		//Error checking
+		system("cls");
+		cout << "\nInvalid input please enter again: " << endl << endl;
+		cin.clear();  //Clear the error flag
+		cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');  //Discard invalid input
+		Expenses();
+		break;
+	}
+	}	
 }
