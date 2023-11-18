@@ -1,3 +1,0 @@
-2023-11-10,12,Expenses,buy maggi
-2023-11-11,5,Income,wash car
-2023-11-12,2023-22-10,Expenses,Buy something
