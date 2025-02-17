@@ -392,8 +392,6 @@ void Record() {
 		getline(cin, Note);
 	}
 
-	// Create or Open a text File
-
 	// Open text file
 	fstream file;
 	string filename = "Record.txt";
